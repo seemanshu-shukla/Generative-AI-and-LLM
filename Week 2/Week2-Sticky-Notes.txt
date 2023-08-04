@@ -1,0 +1,31 @@
+1. So how do you actually go about instruction, fine-tuning and LLM? The first step is to prepare your training data. There are many publicly available datasets that have been used to train earlier generations of language models, although most of them are not formatted as instructions. Luckily, developers have assembled prompt template libraries that can be used to take existing datasets, for example, the large data set of Amazon product reviews and turn them into instruction prompt datasets for fine-tuning. Prompt template libraries include many templates for different tasks and different data sets. Here are three prompts that are designed to work with the Amazon reviews dataset and that can be used to fine tune models for classification, text generation and text summarization tasks.
+
+2. During fine tuning, you select prompts from your training data set and pass them to the LLM, which then generates completions(Predicted Output). Next, you compare the LLM completion with the response specified in the training data(Actual Ouput). You can see here that the model didn't do a great job, it classified the review as neutral, which is a bit of an understatement. The review is clearly very positive. Remember that the output of an LLM is a probability distribution across tokens(SoftMax fun^ used in the final Output layer) so that you can compare the distribution of the completion and that of the training label and use the standard crossentropy function to calculate loss between the two token distributions. And then use the calculated loss to update your model weights in standard backpropagation. You'll do this for many batches of prompt completion(prompt(Input) and competion(Output) pair --> Supervised learning) pairs and over several epochs(Since internally Transformes used Feed forward Neural Network which will be made to back propagate), update the weights so that the model's performance on the task improves.
+
+3. Which of the following are true in respect to Catastrophic Forgetting? Select all that apply.
+
+
+Catastrophic forgetting occurs when a machine learning model forgets previously learned information as it learns new information.
+
+Correct
+The assertion is true, and this process is especially problematic in sequential learning scenarios where the model is trained on multiple tasks over time.
+
+
+Catastrophic forgetting only occurs in supervised learning tasks and is not a problem in unsupervised learning.
+
+This should not be selected
+Catastrophic forgetting is a problem in both supervised and unsupervised learning tasks. In unsupervised learning, it can occur when the model is trained on a new dataset that is different from the one used during pre-training.
+
+
+Catastrophic forgetting is a common problem in machine learning, especially in deep learning models.
+
+Correct
+This assertion is true because these models typically have many parameters, which can lead to overfitting and make it more difficult to retain previously learned information.
+
+
+One way to mitigate catastrophic forgetting is by using regularization techniques to limit the amount of change that can be made to the weights of the model during training.
+
+Correct
+One way to mitigate catastrophic forgetting is by using regularization techniques to limit the amount of change that can be made to the weights of the model during training. This can help to preserve the information learned during earlier training phases and prevent overfitting to the new data.
+
+4.
