@@ -1,0 +1,42 @@
+--> So the output of Lab 2 will be used as an input here in Lab 3 to fine tune the model to lower the toxicity of hate speech.
+
+--> New library that we are gonna use is trl which will give us access to RL algo - PPO.
+
+--> AutoModelForSequenceClassification is the library that we are importing from transformer which will be used to load Facebook binary classifier which when given a string of text or a sequence of text, it'll tell us whether or not that text contains hate speech or not with a particular distribution across not hate or hate and of course in this lab we will be optimising for not hate.
+
+-->AutoModelForSeq2SeqLMWithValueHead this will be reuired when we will be applying LORA to the reward model.
+
+--> LengthSampler will actually sample from our text various lengths so we don't need to pull in the entire sequence, we could pull in just different samples.
+
+--> tqdm : It is responsible for the progress bar coming in jupyter notebook or command line.
+
+--> build_dataset fun^ can do the lenght sampling, also can convert our text into vectors also called tokenizing
+
+--> Note do not mix the tokeniser used for one model with some another modele's tokenizer. Have a separate tokeniser for each model since not doining so can result into very bad results.
+
+--> note that is_trainable is set to true. Have explained about this attribute in the lab 2
+
+--> Notice that trainable parameters in the case of PPO is higer by 769 params as compared to PERT trainable parameters? Why? All 769 are coming from value heads(used to embed PPO) in which 768 are input dimension where remaining 1 is for bias.
+
+--> create_reference_model is used for createating the frozen reference that we will be using to overcome the problem of reward hacking by adding KL divergence to the reward model
+
+--> toxicity_model_name is a BERT based model called Roberta from facebook for hate speech classification. In this we have to labels not hate and hate that maked this model a binary classifier
+
+--> Notice logits [not hate, hate] here postive or non toxic class occupied the first postion. The same was discussed during theory lecture. Please make sure that the discussed order is right since if it is not can result in MORE TOXIC TEXT GENERATION.
+
+--> softmax on logits gives the probabilities score
+
+--> probability of hate speech passed is 0.97 meaning the there are 97% chances that the passed speech is hatefull
+
+--> Hugging face inference pipeline:
+Recall the way we have automated packages for doing preprocessing and all in Machine learning in the same way we are provided with Hugging face inference pipeline that basically does the same meaning now we don't manually need to embed tokeniser followed by compiling the model with various other parameters. We will call a pipeline that is gonna automate the same for us. This is basically done here to speed up the things and basically focus more on the RLHF part.
+
+--> toxicity_evaluator is loading evalauation metric for toxicity criterion on facebook hate speech classification model that we imported earlier represented by toxicity_model_name and in toxic_label attribute we are basically passing the lable name that in used in the facebook model Roberta that represents the label name for negative class which in our case is "hate"
+
+--> Cell below the toxicity evaluation we are basically verifying the toxicity score(negative class) that we calculated earlier for statements like "I want to kiss you"
+
+--> def evalaute_toxicity can be used to determine the mean toxicity score for a sample of dataset
+
+--> Considering the time we are doing the PPO only for 1 epoch
+
+--> PPOTriainer takes the reference model ref_model=ref_model
